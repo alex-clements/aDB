@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>ADB Query</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
+    <script>
+window.onload = function() {
+    console.log("i've loaded bitches");
+}
+
+function clickFunction() {
+    var query = document.getElementById("query-area").value;
+    console.log(query)
+
+    const data = { my_query: query };
+
+    fetch('http://127.0.0.1:5000/query', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(data),
+    })
+    .then(response => response.json())
+    .then(data => {
+      console.log('Success:', data);
+      setQueryResult(JSON.stringify(data));
+    })
+    .catch((error) => {
+      console.error('Error:', error);
+    });
+}
+
+function setQueryResult(data) {
+    document.getElementById("query-result").value = data
+}
+    </script>
+</head>
+<body>
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-4"></div>
+            <div class="col-4">
+                <div class="mb-3">
+                    <label for="query-area" class="form-label">Query</label>
+                    <textarea class="form-control" id="query-area"></textarea>
+                    <div id="query-help" class="form-text">Enter your ADB query here.</div>
+                    <button class="btn btn-primary" onclick="clickFunction()">Run</button>
+                </div>
+
+                <h5>Query Result</h5>
+                <textarea class="form-control" id="query-result"></textarea>
+            </div>
+            <div class="col-4"></div>
+        </div>
+
+    </div>
+</body>
+</html>
