@@ -1,9 +1,11 @@
 import ujson as json
 
+
 class DataItem:
-    def __init__(self, id, data):
+    def __init__(self, id, data, collection):
         self.data = data
         self.id = id
+        self.collection = collection
 
     def set(self, key, val):
         self.data[key] = val

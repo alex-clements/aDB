@@ -47,7 +47,11 @@ class BST:
         self.__to_dict_rec(self.root, result_key, result_data)
 
         storage = {'keys': result_key, 'data': result_data}
-        return storage
+        index_type = 'integer'
+        name = self.name
+
+        return_dict = {'index': storage, 'index_type': index_type, 'name': name}
+        return return_dict
 
     def __to_dict_rec(self, root, result_key, result_data):
         """
@@ -68,7 +72,6 @@ class BST:
             self.__to_dict_rec(root.right, result_key, result_data)
         return
 
-    # TODO: complete implementation of from_json method for BST
     def from_dict(self, data):
         """
         Constructs the BST from JSON data
@@ -182,7 +185,7 @@ class BST:
             return root.data
         elif (key > root.key):
             return self.__dfs_find(root.right, key)
-        elif (key < root.val):
+        elif (key < root.key):
             return self.__dfs_find(root.left, key)
 
 

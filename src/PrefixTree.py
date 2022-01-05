@@ -85,13 +85,33 @@ class PrefixTree:
         Converts the prefix tree to a json representation.
         :return: JSON serialized string representing the prefix tree.
         """
-        return self.root.to_dict()
+        index = self.root.to_dict()
+        name = self.name
+        index_type = 'string'
+        return_dict = {'index': index, 'name': name, 'index_type': index_type}
+        return return_dict
 
-    # TODO: Complete implementation of PrefixTree from_dict method.
-    def from_dict(self, file_name):
+    def from_dict(self, my_dict):
         """
-        Populates the prefix tree using the data in the provided file_name.
-        :param file_name: String representing location of the JSON prefix tree.
-        :return: None
+        Populates the prefix tree using the data in the provided file_name. \n
+        :param my_dict: String representing location of the JSON prefix tree.
+        :return: the populated prefix tree
         """
-        pass
+        return_data = self.__from_dict_helper(my_dict, self.root)
+        return return_data
+
+    def __from_dict_helper(self, my_dict, current_node):
+        """
+        Populates the prefix tree using the data in the provided file_name. \n
+        :param my_dict: String representing location of the JSON prefix tree.
+        :param current_node: Node to which dictionary data will be added
+        :return: the populated prefix tree
+        """
+        for key in my_dict['children']:
+            node = Node(key)
+            for data_element in my_dict['children'][key]['data']:
+                node.data.add(data_element)
+            current_node.children[key] = node
+            if my_dict['children']:
+                self.__from_dict_helper(my_dict['children'][key], node)
+        return self

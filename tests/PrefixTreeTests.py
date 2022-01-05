@@ -2,6 +2,7 @@ import unittest
 from src.PrefixTree import PrefixTree
 import ujson as json
 
+
 class MyTestCase(unittest.TestCase):
     def test_insert_find(self):
         pt = PrefixTree("1")
@@ -29,6 +30,21 @@ class MyTestCase(unittest.TestCase):
         pt.add("Test Name", 4)
         dictionary = pt.to_dict()
         print(dictionary)
+
+    def test_from_dict(self):
+        pt1 = PrefixTree("1")
+        pt1.add("Alex", 1)
+        pt1.add("Andrew", 2)
+        pt1.add("Julia", 3)
+        pt1.add("Test Name", 4)
+        dict1 = pt1.to_dict()
+        print(dict1)
+        pt2 = PrefixTree("2")
+        pt2 = pt2.from_dict(dict1['index'])
+        dict2 = pt2.to_dict()
+        print(dict2)
+        self.assertEqual(dict1['index'], dict2['index'])
+
 
 if __name__ == '__main__':
     unittest.main()

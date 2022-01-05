@@ -1,12 +1,14 @@
 # aDB
 
-aDB is a very rudimentary document-bsed database system.  The 
+aDB is a very rudimentary document-based database system.  The 
 first release is still in development. Currently, it supports 
 the following operations:
 
+- Add document
 - Retrieve document by primary key
 - Index document collection by integer field
 - Index document collection by string field
+- Retrieve documents by an indexed field
 
 Running the `server.py` script will populate the database with
 some sample data and start a Flask server containing a small

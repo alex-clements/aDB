@@ -1,3 +1,5 @@
+from queue import Queue
+
 class Node:
     def __init__(self, val):
         self.next = None
