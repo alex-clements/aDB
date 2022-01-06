@@ -29,9 +29,17 @@ class Node:
 
 class PrefixTree:
     """Prefix Tree created using Trie data structure"""
-    def __init__(self, name):
+    def __init__(self, name, collection):
         self.root = Node("")
         self.name = name
+        self.collection = collection
+
+    def get_collection(self):
+        """
+        Returns the collection the index belongs to.
+        :return: The collection the index belongs to.
+        """
+        return self.collection
 
     def add(self, my_string, node_data):
         """
@@ -87,8 +95,9 @@ class PrefixTree:
         """
         index = self.root.to_dict()
         name = self.name
+        collection = self.collection
         index_type = 'string'
-        return_dict = {'index': index, 'name': name, 'index_type': index_type}
+        return_dict = {'index': index, 'name': name, 'index_type': index_type, 'collection': collection}
         return return_dict
 
     def from_dict(self, my_dict):

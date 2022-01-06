@@ -9,23 +9,29 @@ app = Flask(__name__, static_url_path='/templates/static/', template_folder="tem
 CORS(app)
 
 database = Database()
-# database.index_manager.create_db_index("user_id", "integer")
-# database.index_manager.create_db_index("user_name", "string")
-# database.index_manager.create_db_index("random_number", "integer")
+# database.create_collection('test_collection')
+# database.create_collection('test_collection_2')
+# database.index_manager.create_db_index("user_id",'test_collection', "integer", )
+# database.index_manager.create_db_index("user_name", 'test_collection', "string")
+# database.index_manager.create_db_index("random_number", 'test_collection', "integer")
+# database.index_manager.create_db_index("user_id",'test_collection_2', "integer", )
 #
 # names = ["Alex", "Julia", "Andrew", "Colin", "Keegan", "Philippe", "Katherine", "name_8"]
+# collections = ['test_collection', 'test_collection_2']
 #
 # for i in range(0, 5000):
 #     random_number = random.randint(0, 1000)
 #     random_number_2 = random.randint(0, 5000)
 #     random_number_name = random.randint(0, len(names)-1)
+#     random_number_collection = random.randint(0, 1)
+#     collection = collections[random_number_collection]
 #     data = {"user_id": random_number,
 #             "user_name": names[random_number_name],
 #             "bio": "I am the best",
 #             "other_details": "kjsd;lksjdf",
 #             "birth_date": "05/27/1993",
 #             "random_number": random_number_2}
-#     database.create_new_item(data)
+#     database.create_new_item(collection, data)
 
 @app.route("/")
 def hello():
@@ -62,7 +68,7 @@ def foo():
     except:
         return jsonify(query)
 
-    return_data = database.command_parser(new_query)
+    return_data = database.command_parser(new_query['query'], new_query['collection'])
     return jsonify(return_data)
 
 if __name__ == "__main__":

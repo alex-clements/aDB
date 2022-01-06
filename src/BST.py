@@ -30,12 +30,20 @@ class BST:
     """
     Class representing a binary search tree.\n
     """
-    def __init__(self, name):
+    def __init__(self, name, collection):
         self.name = name
         self.root = None
+        self.collection = collection
 
     def __repr__(self):
         return json.dumps(self.to_dict())
+
+    def get_collection(self):
+        """
+        Returns the collection the index belongs to.
+        :return: The collection the index belongs to.
+        """
+        return self.collection
 
     def to_dict(self):
         """
@@ -49,8 +57,9 @@ class BST:
         storage = {'keys': result_key, 'data': result_data}
         index_type = 'integer'
         name = self.name
+        collection = self.collection
 
-        return_dict = {'index': storage, 'index_type': index_type, 'name': name}
+        return_dict = {'index': storage, 'index_type': index_type, 'name': name, 'collection': collection}
         return return_dict
 
     def __to_dict_rec(self, root, result_key, result_data):

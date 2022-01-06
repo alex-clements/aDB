@@ -45,52 +45,73 @@ class Database:
         self.largest_id = self.largest_id + 1
         return item_primary_key
 
-    def command_parser(self, query):
+    def create_collection(self, collection_name):
+        """
+        Creates a new collection folder with the name provided.
+        :param collection_name: String. Name of the collection to be created.
+        :return: None
+        """
+        parent_dir = "../data/"
+        new_dir = parent_dir + collection_name
+        parent_dir_index = "../indices/"
+        new_dir_index = parent_dir_index + collection_name
+        try:
+            os.mkdir(new_dir)
+            os.mkdir(new_dir_index)
+        except FileExistsError:
+            print("collection already exists")
+
+    def command_parser(self, query, collection):
         """
         Takes a query passed from the server and parses it out.  If the key is "pk", finds the data by
         primary key.  Otherwise, it finds the data by a field name.\n
         :param query: an object with a single key-value pair.
-        :return: an object with database primary keys as the keys and the data as the values
+        :param collection: String. The collection the data belongs to.
+        :return: an object with database primary keys as the keys and the data as the values.
         """
         for key in query:
             if key == "pk":
-                return self.query_manager.find_by_primary_key_wrapper(query[key])
+                return self.query_manager.find_by_primary_key_wrapper(query[key], collection)
             elif key == "shutdown":
                 self.shutdown()
                 return {}
             else:
-                return self.query_manager.find_by_field(query)
+                return self.query_manager.find_by_field(query, collection)
 
     def get_all_files(self):
         """
         gets the file_names of all files in the data directory and returns them as a set
         :return: a set of filenames
         """
-        files_array = os.listdir('../data')
+        folders_array = os.listdir('../data')
         return_set = set()
-        for file_name in files_array:
-            return_set.add("../data/" + file_name)
+        for folder in folders_array:
+            files_array = os.listdir('../data/' + folder)
+            for file_name in files_array:
+                return_set.add("../data/" + folder + "/" + file_name)
         return return_set
 
-    def get_file_name(self, database_id):
+    def get_file_name(self, database_id, collection):
         """
         Uses a simple hashing function on the database_id to obtain the filename containing
         the given id.\n
         :param database_id: integer representing database primary key
+        :param collection: string representing the database collection
         :return: file name string
         """
         file_id = int(database_id / self.documents_per_file)
-        file_name = "../data/file" + str(file_id) + ".json"
+        file_name = "../data/" + collection + "/file" + str(file_id) + ".json"
         return file_name
 
-    def update_item(self,item_primary_key, data={}):
+    def update_item(self,item_primary_key, collection, data=dict()):
         """
         Updates an existing item with the data provided.\n
         :param item_primary_key: database primary key
         :param data: Updated data corresponding to the database primary key.
+        :param collection: String. Collection the data belongs to.
         :return: Integer. Primary key of the updated item.
         """
-        data_row = DataItem(item_primary_key, data)
+        data_row = DataItem(item_primary_key, data, collection)
         self.data_processor.add(data_row)
         return item_primary_key
 
