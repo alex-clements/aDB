@@ -10,6 +10,9 @@ class DataItem:
     def set(self, key, val):
         self.data[key] = val
 
+    def get_collection(self):
+        return self.collection
+
     def getId(self):
         return self.id
 

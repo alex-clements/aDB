@@ -70,7 +70,8 @@ class DataProcessor:
         data_row = self.data_queue.pop()
 
         data_row_id = data_row.getId()
-        file_name = self.database.get_file_name(data_row_id)
+        collection = data_row.get_collection()
+        file_name = self.database.get_file_name(data_row_id, collection)
 
         if file_name not in self.processing_data:
             my_dict = dict()
