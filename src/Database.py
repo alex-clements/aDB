@@ -1,13 +1,13 @@
 import time
 import os
-from DataItem import DataItem
-from IndexManager import IndexManager
-from Writer import Writer
-from DiskManager import DiskManager
-from Reader import Reader
-from DataProcessor import DataProcessor
-from CacheManager import CacheManager
-from QueryManager import QueryManager
+from src.DataItem import DataItem
+from src.IndexManager import IndexManager
+from src.Writer import Writer
+from src.DiskManager import DiskManager
+from src.Reader import Reader
+from src.DataProcessor import DataProcessor
+from src.CacheManager import CacheManager
+from src.QueryManager import QueryManager
 
 
 class Database:
@@ -29,7 +29,7 @@ class Database:
         self.disk_manager = DiskManager(self, self.reader)
         self.cache_manager = CacheManager(self, self.reader)
         self.data_processor = DataProcessor(self, self.disk_manager)
-        self.query_manager = QueryManager(self, self.cache_manager, self.disk_manager, self.index_manager)
+        self.query_manager = QueryManager(self, self.cache_manager, self.index_manager)
 
     def create_new_item(self, collection, data={}):
         """
@@ -76,7 +76,7 @@ class Database:
                 self.shutdown()
                 return {}
             else:
-                return self.query_manager.find_by_field(query, collection)
+                return self.query_manager.process_query(query, collection)
 
     def get_all_files(self):
         """
@@ -143,4 +143,22 @@ class Database:
         self.saving_threads_running = False
         self.index_manager.save_indices_to_files()
         self.cache_manager.clear_cache()
+        self.save_params_to_file()
         print("Shutdown complete.")
+
+    def save_params_to_file(self):
+        """
+        Saves the database parameters to a file.
+        :return: None
+        """
+        save_object = {'largest_id': self.largest_id, 'documents_per_file': self.documents_per_file}
+        self.write_to_file('../config/db_params.json', save_object, write_to_cache=False, remove_from_cache=False)
+
+    def load_params_from_file(self):
+        """
+        Loads the database parameters from a file.
+        :return: None
+        """
+        data = self.reader.read_from_file('../config/db_params.json')
+        self.largest_id = data['largest_id']
+        self.documents_per_file = data['documents_per_file']

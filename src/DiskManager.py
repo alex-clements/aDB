@@ -1,5 +1,5 @@
 import threading
-from BlockingQueue import BlockingQueue
+from src.BlockingQueue import BlockingQueue
 
 
 class DiskManager:

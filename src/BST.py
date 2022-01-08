@@ -1,7 +1,5 @@
 import ujson as json
 
-from src.Reader import Reader
-
 
 class Node:
     """
@@ -10,7 +8,7 @@ class Node:
     def __init__(self, key, val):
         """
         :param key: the key of the BST
-        :param val:
+        :param val: INT or LIST. The data value of the BST.
         """
         self.key = key
         self.data = set()
@@ -103,7 +101,7 @@ class BST:
         :return: Integer of next counter
         """
         root.key = keys[counter]
-        root.data = vals[counter]
+        root.data = set(vals[counter])
 
         if keys[counter+1] is not None:
             root.left = Node(0, [])
@@ -169,32 +167,77 @@ class BST:
 
         return
 
-    def find(self, key):
+    def find(self, key, comparison_operator=None):
         """
         Initializes the find function searching for a key in the BST.  If the root doesn't exist,
         this will return an empty set.  Otherwise, it begins the dfs_find method.\n
         :param key: the BST key to search for.
+        :param comparison_operator: operator used to find values above or below those specified.  Supports $gt and $lt.
         :return: Set populated with database primary keys.
         """
         if not self.root:
             return set()
 
-        return self.__dfs_find(self.root, key)
+        if not comparison_operator:
+            return self.__dfs_find(self.root, key)
+        elif comparison_operator == "$gt":
+            print("key = ", key)
+            return self.__dfs_find_greater(self.root, key)
+        elif comparison_operator == "$lt":
+            return self.__dfs_find_less(self.root, key)
 
     def __dfs_find(self, root, key):
         """
-        Finds a node with a specified val in the BST.  Returns an empty set if the key cannot be found.
+        Finds a node with a specified val in the BST.  Returns an empty set if the key cannot be found. \n
         :param root: the BST node to examine.
         :param key: the BST key to search for.
         :return: Set populated with database primary keys.
         """
         if not root:
             return set()
-        if (key == root.key):
+        if key == root.key:
             return root.data
-        elif (key > root.key):
+        elif key > root.key:
             return self.__dfs_find(root.right, key)
-        elif (key < root.key):
+        elif key < root.key:
             return self.__dfs_find(root.left, key)
 
+    def __dfs_find_greater(self, root, key):
+        """
+        Finds all nodes with specified vals greater than the one specified. \n
+        :param root: BST root node.
+        :param key: BST key to compare against.
+        :return: Set populated with database primary keys.
+        """
 
+        if not root:
+            return set()
+        print("key = ", key)
+        print("root.key = ", root.key)
+        if key == root.key:
+            return self.__dfs_find_greater(root.right, key)
+        if root.key > key:
+            print(root.key)
+            return_set = root.data.union(self.__dfs_find_greater(root.right, key), self.__dfs_find_greater(root.left, key))
+            return return_set
+        if root.key < key:
+            return_set = set().union(self.__dfs_find_greater(root.right, key))
+            return return_set
+
+    def __dfs_find_less(self, root, key):
+        """
+        Finds all nodes with specified keys less than the one specified. \n
+        :param root: BST root node.
+        :param key: BST key to compare against.
+        :return: Set populated with database primary keys.
+        """
+        if not root:
+            return set()
+        if key == root.key:
+            return self.__dfs_find_less(root.left, key)
+        if root.key < key:
+            return_set = root.data.union(self.__dfs_find_less(root.right, key), self.__dfs_find_less(root.left, key))
+            return return_set
+        if root.key > key:
+            return_set = set().union(self.__dfs_find_less(root.left, key))
+            return return_set

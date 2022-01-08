@@ -123,13 +123,14 @@ class IndexManager:
                 file_name = "../indices/" + "/" + collection + "/" + index + ".json"
                 self.database.write_to_file(file_name, data, write_to_cache=False)
 
-    def find(self, key, query, collection):
+    def find(self, key, query, collection, comparison_operator=None):
         """
         Finds the primary keys associated with a specific field value \n
         :param key: a string representing a key in the indices dictionary
         :param query: an object with a single key value pair
         :param collection: String. The collection the index belongs to.
+        :param comparison_operator: Comparison operator to note when retrieving primary keys.
         :return: an array of primary keys
         """
-        primary_keys = self.indices[collection][key].find(query)
+        primary_keys = self.indices[collection][key].find(query, comparison_operator)
         return primary_keys

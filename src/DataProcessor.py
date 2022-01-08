@@ -1,4 +1,4 @@
-from BlockingQueue import BlockingQueue
+from src.BlockingQueue import BlockingQueue
 import threading
 import time
 
@@ -13,7 +13,7 @@ class DataProcessor:
         self.processing_data = dict()
 
         self.find_ready_data_thread = threading.Thread(target=self.find_ready_data, name="find_ready_data_thread_1",
-                                                       args=())
+                                                       args=(), daemon=True)
         self.find_ready_data_thread.start()
         self.init_processing_threads()
 
@@ -32,6 +32,7 @@ class DataProcessor:
         """
         self.data_queue.join()
         self.ready_data_queue.join()
+        self.find_ready_data_thread.join(0)
         print("Processing threads stopped.")
 
     def init_processing_threads(self):

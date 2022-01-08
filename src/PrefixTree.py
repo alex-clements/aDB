@@ -75,10 +75,11 @@ class PrefixTree:
                 curr = curr.children[character]
         return curr.data
 
-    def find(self, my_string):
+    def find(self, my_string, comparison_operator=None):
         """
         Finds a string of multiple words in the prefix tree.
         :param my_string: String of several words.
+        :param comparison_operator: String. Operator to note when retrieving primary keys.
         :return: Set of data associated with Prefix tree nodes.
         """
         data = set()
